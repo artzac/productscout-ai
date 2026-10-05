@@ -22,14 +22,17 @@ st.set_page_config(
 st.title("🔎 ProductScout AI")
 
 st.subheader(
-    "Agentic Product Research Assistant"
+    "Marketplace Identity & Risk Product Research"
 )
 
 st.write(
     """
-    ProductScout combines internal product metrics,
-    customer feedback, and current web research to
-    investigate product problems and opportunities.
+    ProductScout is an agentic research assistant for 
+    marketplace registration, authentication, identity 
+    verification, account recovery, fraud, and risk.
+    It combines synthetic product metrics, customer feedback, 
+    and live industry research to identify problems, evaluate 
+    tradeoffs, and recommend areas for investigation.
     """
 )
 
