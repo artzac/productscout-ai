@@ -38,6 +38,8 @@ st.write(
 # USER INPUT
 # =========================================================
 
+MAX_PROMPT_LENGTH = 1000
+
 question = st.text_area(
     "Research question",
     placeholder=(
@@ -45,9 +47,14 @@ question = st.text_area(
         "using our metrics, customer feedback, and "
         "current industry best practices."
     ),
-    height=130
+    height=130,
+    max_chars=MAX_PROMPT_LENGTH,
+    help=f"Maximum {MAX_PROMPT_LENGTH:,} characters."
 )
 
+st.caption(
+    f"{len(question):,} / {MAX_PROMPT_LENGTH:,} characters"
+)
 
 run_button = st.button(
     "Run Research",
@@ -66,7 +73,12 @@ if run_button:
         st.warning(
             "Enter a research question first."
         )
+    elif len(question) > MAX_PROMPT_LENGTH:
 
+        st.error(
+            f"Research questions are limited to "
+            f"{MAX_PROMPT_LENGTH:,} characters."
+        )
     else:
 
         try:

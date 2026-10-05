@@ -25,7 +25,7 @@ tavily_client = TavilyClient(
 # =========================================================
 
 MODEL = "gpt-5-mini"
-
+MAX_PROMPT_LENGTH = 1000
 INPUT_PRICE_PER_MILLION = 0.25
 CACHED_INPUT_PRICE_PER_MILLION = 0.025
 OUTPUT_PRICE_PER_MILLION = 2.00
@@ -277,6 +277,23 @@ Answer behavior:
 
 def run_productscout(question, event_callback=None):
 
+    if not isinstance(question, str):
+        raise ValueError(
+            "Question must be a text string."
+        )
+
+    question = question.strip()
+
+    if not question:
+        raise ValueError(
+            "Question cannot be empty."
+        )
+
+    if len(question) > MAX_PROMPT_LENGTH:
+        raise ValueError(
+            f"Question exceeds the "
+            f"{MAX_PROMPT_LENGTH:,}-character limit."
+        )
     # -----------------------------------------------------
     # UI / OBSERVABILITY EVENT HELPER
     # -----------------------------------------------------
