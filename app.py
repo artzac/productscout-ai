@@ -39,6 +39,10 @@ st.write(
 # =========================================================
 
 MAX_PROMPT_LENGTH = 1000
+MAX_SESSION_RUNS = 5
+
+if "research_runs" not in st.session_state:
+    st.session_state.research_runs = 0
 
 question = st.text_area(
     "Research question",
@@ -56,12 +60,23 @@ st.caption(
     f"{len(question):,} / {MAX_PROMPT_LENGTH:,} characters"
 )
 
+runs_remaining = MAX_SESSION_RUNS - st.session_state.research_runs
+
+st.caption(
+    f"Research runs remaining this session: "
+    f"{runs_remaining} / {MAX_SESSION_RUNS}"
+)
 run_button = st.button(
     "Run Research",
     type="primary"
+    disabled=runs_remaining <= 0
 )
 
-
+if runs_remaining <= 0:
+    st.info(
+        "You've reached the 5-run limit for this demo session."
+    )
+    
 # =========================================================
 # RUN AGENT
 # =========================================================
@@ -80,6 +95,8 @@ if run_button:
             f"{MAX_PROMPT_LENGTH:,} characters."
         )
     else:
+        # Count this as a research run
+        st.session_state.research_runs += 1
 
         try:
 
