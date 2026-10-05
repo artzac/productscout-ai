@@ -282,7 +282,7 @@ if run_button:
             with col1:
 
                 st.metric(
-                    "Iterations",
+                    "Research Iterations",
                     result["iterations"]
                 )
 

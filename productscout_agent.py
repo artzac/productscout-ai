@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import json
 import os
 import time
-
+import requests
 
 # =========================================================
 # ENVIRONMENT
@@ -104,25 +104,52 @@ def get_customer_feedback(topic):
 def search_web(query):
     """
     Searches the live web using Tavily.
+    Retries temporary connection failures before giving up.
     """
 
-    results = tavily_client.search(
-        query,
-        max_results=5
-    )
+    max_attempts = 3
 
-    simplified_results = []
+    for attempt in range(1, max_attempts + 1):
 
-    for result in results["results"]:
-        simplified_results.append(
-            {
-                "title": result["title"],
-                "url": result["url"],
-                "content": result["content"]
-            }
-        )
+        try:
+            results = tavily_client.search(
+                query,
+                max_results=5,
+                timeout=20
+            )
 
-    return simplified_results
+            simplified_results = []
+
+            for result in results["results"]:
+                simplified_results.append(
+                    {
+                        "title": result["title"],
+                        "url": result["url"],
+                        "content": result["content"]
+                    }
+                )
+
+            return simplified_results
+
+        except requests.exceptions.RequestException as error:
+
+            if attempt < max_attempts:
+                time.sleep(2 ** (attempt - 1))
+                continue
+
+            return [
+                {
+                    "title": "Web search temporarily unavailable",
+                    "url": "",
+                    "content": (
+                        "Live web search could not be completed "
+                        "because of a temporary connection problem. "
+                        "Continue the analysis using available internal "
+                        "data and customer feedback, and clearly state "
+                        "that live web research was unavailable."
+                    )
+                }
+            ]
 
 
 # =========================================================
@@ -392,7 +419,12 @@ def run_productscout(question, event_callback=None):
 
         return {
             "answer": answer,
-            "iterations": iteration,
+            "iterations": len(
+                {
+                    item["iteration"]
+                    for item in activity
+                    }
+                ),
             "total_tool_calls": total_tool_calls,
             "web_search_calls": web_search_calls,
             "execution_time": elapsed_time,

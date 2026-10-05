@@ -2,3 +2,4 @@ openai
 tavily-python
 streamlit
 python-dotenv
+requests
