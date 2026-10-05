@@ -68,7 +68,7 @@ st.caption(
 )
 run_button = st.button(
     "Run Research",
-    type="primary"
+    type="primary",
     disabled=runs_remaining <= 0
 )
 
@@ -76,7 +76,7 @@ if runs_remaining <= 0:
     st.info(
         "You've reached the 5-run limit for this demo session."
     )
-    
+
 # =========================================================
 # RUN AGENT
 # =========================================================
