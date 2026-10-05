@@ -46,13 +46,89 @@ MAX_SESSION_RUNS = 5
 
 if "research_runs" not in st.session_state:
     st.session_state.research_runs = 0
+if "research_question" not in st.session_state:
+    st.session_state.research_question = ""
 
+
+EXAMPLE_PROMPTS = {
+    "authentication": (
+        "Analyze our authentication and account security experience. "
+        "Use internal metrics and customer feedback to understand "
+        "where legitimate users are encountering step-up authentication "
+        "or login friction. Compare our approach with current industry "
+        "practices and recommend how we should reduce friction without "
+        "increasing account takeover risk."
+    ),
+
+    "false_positive": (
+        "Legitimate users appear to be getting caught by our risk "
+        "controls. Analyze our internal metrics and customer feedback, "
+        "compare them with current industry practices, and recommend "
+        "how we should reduce false positives without materially "
+        "increasing fraud."
+    ),
+
+    "international": (
+        "Evaluate our international identity-verification experience. "
+        "Use our internal metrics and customer feedback, research "
+        "current industry practices, and identify the biggest "
+        "opportunities."
+    ),
+
+    "registration": (
+        "Analyze friction in our registration experience using internal "
+        "metrics and customer feedback. Compare our experience with "
+        "current marketplace best practices and recommend the most "
+        "important areas to investigate."
+    )
+}
+
+
+def set_example_prompt(prompt):
+    st.session_state.research_question = prompt
+
+st.markdown("**Try an example research question:**")
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    st.button(
+       "🔐 Authentication & ATO",
+        on_click=set_example_prompt,
+        args=(EXAMPLE_PROMPTS["authentication"],),
+        use_container_width=True
+    )
+
+with col2:
+    st.button(
+        "⚖️ False-positive risk",
+        on_click=set_example_prompt,
+        args=(EXAMPLE_PROMPTS["false_positive"],),
+        use_container_width=True
+    )
+
+with col3:
+    st.button(
+        "🌎 International identity",
+        on_click=set_example_prompt,
+        args=(EXAMPLE_PROMPTS["international"],),
+        use_container_width=True
+    )
+
+with col4:
+    st.button(
+        "📝 Registration friction",
+        on_click=set_example_prompt,
+        args=(EXAMPLE_PROMPTS["registration"],),
+        use_container_width=True
+    )
+    
 question = st.text_area(
     "Research question",
+    key="research_question",
     placeholder=(
-        "Example: Analyze our seller onboarding problem "
-        "using our metrics, customer feedback, and "
-        "current industry best practices."
+        "Choose an example above or enter your own question about "
+        "registration, authentication, identity, fraud, or risk."
     ),
     height=130,
     max_chars=MAX_PROMPT_LENGTH,
