@@ -300,7 +300,7 @@ Run the Streamlit application:
 streamlit run app.py
 ```
 
-The `.env` file is excluded from Git and should never be committed to the repository.
+The `.env` file is excluded from Git.
 
 ---
 
